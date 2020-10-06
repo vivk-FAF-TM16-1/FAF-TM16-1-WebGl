@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+
+            font-family: courier, serif;
+        }
+
+        .column {
+            float: left;
+            height: 100%;
+        }
+
+        .column-full-screen {
+            height: 100vh;
+        }
+
+        .left {
+            width: 70%;
+        }
+
+        .right {
+            width: 30%;
+        }
+
+        .row {
+            float: top;
+            width: 100%;
+        }
+
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .top {
+            height: 400px;
+        }
+
+        .bottom {
+            height: 200px;
+        }
+
+        input {
+        }
+
+        .input-column {
+            padding: 0;
+            display: block;
+            overflow: hidden;
+
+            float: left;
+        }
+
+        .input-vector3 {
+            width: 60%;
+        }
+
+        .label-column {
+            float: left;
+            width: 25%;
+        }
+
+        .field-name {
+            width: 30%;
+            padding-left: 15px;
+        }
+
+        .field-value {
+            width: 60%;
+            float: left;
+        }
+
+        .component-name {
+            background-color: #cbcbcb;
+            padding-left: 15px;
+        }
+
+        .component-name p {
+            font-size: 140%;
+            padding: 3px;
+            margin: 0 0 10px;
+            font-weight: bold;
+        }
+
+        .component-value {
+            border-bottom: 1px outset black;
+            background-color: #c2c2c2;
+        }
+
+        .vector3-field {
+            float: left;
+            width: 33%;
+        }
+
+        .canvas {
+            background-color: #474747;
+
+            width: 100%;
+            height: 100%;
+        }
+
+        .hierarchy {
+            height: 330px;
+            overflow-y: auto;
+        }
+
+        .hierarchy a {
+            color: black;
+            display: block;
+            padding: 12px;
+            text-decoration: none;
+        }
+
+        .hierarchy a:hover {
+            background-color: #ccc;
+        }
+
+        .hierarchy a.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .transform {
+            height: 135px;
+        }
+
+        .ui-side {
+            background-color: #c2c2c2;;
+        }
+
+        .hierarchy-button {
+            float: right;
+            border: 1px outset #000000;
+            background-color: #cbcbcb;
+            height: 25px;
+            width: 40px;
+            padding: 0;
+            cursor: pointer;
+
+            margin-right: 2px;
+            font-size: 20px;
+            font-family: Geneva, Arial, Helvetica, sans-serif;
+        }
+
+        .component-single-field {
+            padding-bottom: 4px;
+            padding-top: 4px;
+        }
+
+        
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="column column-full-screen left">
+        <canvas class="canvas"></canvas>
+    </div>
+    <div class="column column-full-screen right ui-side">
+        <div class="row top component-value">
+            <div class="component-name hierarchy-add-element">
+                <p>Hierarchy</p>
+            </div>
+            <div class="row hierarchy">
+                <div class="hierarchy-link">
+
+                </div>
+            </div>
+            <div>
+                <button class="hierarchy-button hierarchy-button-minus" type="button">-</button>
+                <button class="hierarchy-button hierarchy-button-plus" type="button">+</button>
+            </div>
+        </div>
+        <div class="hideable-components on-change">
+            <div class="row bottom component-value transform">
+                <div class="component-name">
+                    <p>Transform</p>
+                </div>
+                <div class="row">
+
+                    <label class="field-name label-column component-single-field">Position</label>
+                    <div class="field-value component-single-field position">
+                        <div class="vector3-field">
+                            <label class="label-column">X: </label>
+                            <input class="input-column input-vector3 vector3-x"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+
+                        <div class="vector3-field">
+                            <label class="label-column">Y: </label>
+                            <input class="input-column input-vector3 vector3-y"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+                        <div class="vector3-field">
+                            <label class="label-column">Z: </label>
+                            <input class="input-column input-vector3 vector3-z"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+                    </div>
+
+                    <label class="field-name label-column component-single-field">Rotation</label>
+                    <div class="field-value component-single-field rotation">
+                        <div class="vector3-field">
+                            <label class="label-column">X: </label>
+                            <input class="input-column input-vector3 vector3-x"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+
+                        <div class="vector3-field">
+                            <label class="label-column">Y: </label>
+                            <input class="input-column input-vector3 vector3-y"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+                        <div class="vector3-field">
+                            <label class="label-column">Z: </label>
+                            <input class="input-column input-vector3 vector3-z"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+                    </div>
+
+                    <label class="field-name label-column component-single-field">Scale</label>
+                    <div class="field-value component-single-field scale">
+                        <div class="vector3-field">
+                            <label class="label-column">X: </label>
+                            <input class="input-column input-vector3 vector3-x"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+
+                        <div class="vector3-field">
+                            <label class="label-column">Y: </label>
+                            <input class="input-column input-vector3 vector3-y"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+                        <div class="vector3-field">
+                            <label class="label-column">Z: </label>
+                            <input class="input-column input-vector3 vector3-z"
+                                   type="number" value="0.0" step="0.01" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script  id="vertex-shader-3d" type="x-shader/x-vertex">
+    attribute vec4 a_position;
+    attribute vec4 a_color;
+
+    uniform mat4 u_matrix;
+
+    varying vec4 v_color;
+
+    void main() {
+        gl_Position = u_matrix * a_position;
+
+        v_color = a_color;
+    }
+</script>
+
+<script  id="fragment-shader-3d" type="x-shader/x-fragment">
+    precision mediump float;
+
+    varying vec4 v_color;
+
+    uniform vec4 u_colorMult;
+
+    void main() {
+        gl_FragColor = v_color * u_colorMult;
+    }
+</script>
+
+<script src="https://webglfundamentals.org/webgl/resources/webgl-utils.js"></script>
+<script src="https://webglfundamentals.org/webgl/resources/m4.js"></script>
+<script src="https://webglfundamentals.org/webgl/resources/primitives.js"></script>
+<script src="script/Utils.js"></script>
+<script src="script/Vector4.js"></script>
+<script src="script/Shape.js"></script>
+<script src="script/Main.js"></script>
+
+<script src="script/ui-controller.js"></script>
+</body>
+</html>

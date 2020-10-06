@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1h9EbKslwCqzFDEVsxoCOwQTKpq" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../rgb_triangle" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\3d_shapes\Script" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="" />
+      <created>1599414979558</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599414979558</updated>
+      <workItem from="1599414980715" duration="153000" />
+      <workItem from="1599415148395" duration="3532000" />
+      <workItem from="1599926113573" duration="96000" />
+      <workItem from="1599926224281" duration="18688000" />
+      <workItem from="1599946699761" duration="341000" />
+      <workItem from="1600274859141" duration="1774000" />
+      <workItem from="1600757391997" duration="3536000" />
+      <workItem from="1601040763113" duration="697000" />
+      <workItem from="1601226042190" duration="3049000" />
+      <workItem from="1601269518291" duration="28000" />
+      <workItem from="1601621531909" duration="865000" />
+      <workItem from="1601721203792" duration="16884000" />
+      <workItem from="1601967027430" duration="18727000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1601724522046">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1601724522046" />
+    <state x="479" y="153" key="SettingsEditor" timestamp="1599946683915">
+      <screen x="0" y="0" width="1920" height="1080" />
+    </state>
+    <state x="479" y="153" key="SettingsEditor/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1599946683915" />
+  </component>
+</project>

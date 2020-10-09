@@ -1,21 +1,17 @@
-let DefaultVertexColor = [255, 255, 255, 255];
+"use strict";
 
 const CUBE_FACE_INDICES = [
-    [3, 7, 5, 1], // right
-    [6, 2, 0, 4], // left
-    [6, 7, 3, 2], // ??
-    [0, 1, 5, 4], // ??
-    [7, 6, 4, 5], // front
-    [2, 3, 1, 0], // back
+    [3, 7, 5, 1],
+    [6, 2, 0, 4],
+    [6, 7, 3, 2],
+    [0, 1, 5, 4],
+    [7, 6, 4, 5],
+    [2, 3, 1, 0],
 ];
 
-let Shape = class {
+class shapesInfo {
 
     // region Create Vertices
-
-    static allButIndices(name) {
-        return name !== 'indices';
-    }
 
     static deIndexVertices(vertices) {
         const indices = vertices.indices;
@@ -25,12 +21,14 @@ let Shape = class {
         function expandToUnIndexed(channel) {
             const srcBuffer = vertices[channel];
             const numComponents = srcBuffer.numComponents;
-            const dstBuffer = webglUtils.createAugmentedTypedArray(numComponents, numElements, srcBuffer.constructor);
+            const dstBuffer = utils.createAugmentedTypedArray(
+                numComponents, numElements, srcBuffer.constructor
+            );
 
-            for (let i = 0; i < numElements; ++i) {
+            for (let i = 0; i < numElements; i++) {
                 const ndx = indices[i];
                 const offset = ndx * numComponents;
-                for (let j = 0; j < numComponents; ++j) {
+                for (let j = 0; j < numComponents; j++) {
                     dstBuffer.push(srcBuffer[offset + j]);
                 }
             }
@@ -38,29 +36,38 @@ let Shape = class {
             newVertices[channel] = dstBuffer;
         }
 
-        Object.keys(vertices).filter(Shape.allButIndices).forEach(expandToUnIndexed);
+        function allButIndices(name) {
+            return name !== 'indices';
+        }
+
+        Object.keys(vertices).filter(allButIndices).forEach(expandToUnIndexed);
 
         return newVertices;
-    }
-
-    static randColor(ndx, channel) {
-        return channel < 3 ? ((64 + Math.random() * 64) | 0) : 255;
     }
 
     static makeDefaultVertexColors(vertices, options) {
         options = options || { };
 
+        const rand = function(ndx, channel) {
+            return channel < 3 ? utils.rand(0, 255) : 255;
+        };
+
         const numElements = vertices.position.numElements;
-        const vColors = webglUtils.createAugmentedTypedArray(4, numElements, Uint8Array);
+        const vColors = utils.createAugmentedTypedArray(
+            4, numElements, Uint8Array
+        );
 
         vertices.color = vColors;
 
         if (vertices.indices) {
-            for (let i = 0; i < numElements; ++i) {
-                vColors.push(Shape.randColor(i, 0),
-                    Shape.randColor(i, 1),
-                    Shape.randColor(i, 2),
-                    Shape.randColor(i, 3));
+            for (let i = 0; i < numElements; i++) {
+                const color = [
+                    rand(i, 0),
+                    rand(i, 1),
+                    rand(i, 2),
+                    1
+                ];
+                vColors.push(color);
             }
 
             return vertices;
@@ -69,11 +76,13 @@ let Shape = class {
         const numVertsPerColor = options.vertsPerColor || 3;
         const numSets = numElements / numVertsPerColor;
         for (let i = 0; i < numSets; ++i) {
-            const color = [Shape.randColor(i, 0),
-                Shape.randColor(i, 1),
-                Shape.randColor(i, 2),
-                Shape.randColor(i, 3)];
-            for (let j = 0; j < numVertsPerColor; ++j) {
+            const color = [
+                rand(i, 0),
+                rand(i, 1),
+                rand(i, 2),
+                1
+            ];
+            for (let j = 0; j < numVertsPerColor; j++) {
                 vColors.push(color);
             }
         }
@@ -84,12 +93,12 @@ let Shape = class {
     static createFlattenedFunc(vertFunc) {
         return function(gl, ...args) {
             let vertices = vertFunc(...args);
-            vertices = Shape.deIndexVertices(vertices);
-            vertices = Shape.makeDefaultVertexColors(vertices, {
+            vertices = shapesInfo.deIndexVertices(vertices);
+            vertices = shapesInfo.makeDefaultVertexColors(vertices, {
                 vertsPerColor: 6
             });
 
-            return webglUtils.createBufferInfoFromArrays(gl, vertices);
+            return utils.createBufferInfoFromArrays(gl, vertices);
         };
     }
 
@@ -97,7 +106,9 @@ let Shape = class {
 
     // region Shape functions
 
-    static createCubeVertices(size) {
+    static createCubeVertices(
+        size
+    ) {
         const k = size / 2;
 
         const cornerVertices = [
@@ -128,12 +139,12 @@ let Shape = class {
         ];
 
         const numVertices = 6 * 4;
-        const positions = webglUtils.createAugmentedTypedArray(3, numVertices);
-        const normals   = webglUtils.createAugmentedTypedArray(3, numVertices);
-        const texCoords = webglUtils.createAugmentedTypedArray(2 , numVertices);
-        const indices   = webglUtils.createAugmentedTypedArray(3, 6 * 2, Uint16Array);
+        const positions = utils.createAugmentedTypedArray(3, numVertices);
+        const normals   = utils.createAugmentedTypedArray(3, numVertices);
+        const texCoords = utils.createAugmentedTypedArray(2 , numVertices);
+        const indices   = utils.createAugmentedTypedArray(3, 6 * 2, Uint16Array);
 
-        for (let i = 0; i < 6; ++i) {
+        for (let i = 0; i < 6; i++) {
             const faceIndices = CUBE_FACE_INDICES[i];
 
             for (let v = 0; v < 4; ++v) {
@@ -147,8 +158,8 @@ let Shape = class {
             }
 
             const offset = 4 * i;
-            indices.push(offset + 0, offset + 1, offset + 2);
-            indices.push(offset + 0, offset + 2, offset + 3);
+            indices.push(offset, offset + 1, offset + 2);
+            indices.push(offset, offset + 2, offset + 3);
         }
 
         return {
@@ -160,7 +171,11 @@ let Shape = class {
     }
 
 
-    static createSphereVertices(radius, subdivisionsAxis, subdivisionsHeight) {
+    static createSphereVertices(
+        radius,
+        subdivisionsAxis,
+        subdivisionsHeight
+    ) {
         if (subdivisionsAxis <= 0 || subdivisionsHeight <= 0) {
             throw Error('subdivisionAxis and subdivisionHeight must be > 0');
         }
@@ -174,9 +189,9 @@ let Shape = class {
         const longRange = endLongitudeInRadians - startLongitudeInRadians;
 
         const numVertices = (subdivisionsAxis + 1) * (subdivisionsHeight + 1);
-        const positions = webglUtils.createAugmentedTypedArray(3, numVertices);
-        const normals   = webglUtils.createAugmentedTypedArray(3, numVertices);
-        const texCoords = webglUtils.createAugmentedTypedArray(2 , numVertices);
+        const positions = utils.createAugmentedTypedArray(3, numVertices);
+        const normals   = utils.createAugmentedTypedArray(3, numVertices);
+        const texCoords = utils.createAugmentedTypedArray(2 , numVertices);
 
         for (let y = 0; y <= subdivisionsHeight; y++) {
             for (let x = 0; x <= subdivisionsAxis; x++) {
@@ -198,9 +213,11 @@ let Shape = class {
         }
 
         const numVertsAround = subdivisionsAxis + 1;
-        const indices = webglUtils.createAugmentedTypedArray(3,
+        const indices = utils.createAugmentedTypedArray(
+            3,
             subdivisionsAxis * subdivisionsHeight * 2,
-            Uint16Array);
+            Uint16Array
+        );
 
         for (let x = 0; x < subdivisionsAxis; x++) {
             for (let y = 0; y < subdivisionsHeight; y++) {
@@ -232,7 +249,8 @@ let Shape = class {
         radialSubdivisions,
         verticalSubdivisions,
         opt_topCap,
-        opt_bottomCap) {
+        opt_bottomCap
+     ) {
         if (radialSubdivisions < 3) {
             throw Error('radialSubdivisions must be 3 or greater');
         }
@@ -247,11 +265,14 @@ let Shape = class {
         const extra = (topCap ? 2 : 0) + (bottomCap ? 2 : 0);
 
         const numVertices = (radialSubdivisions + 1) * (verticalSubdivisions + 1 + extra);
-        const positions = webglUtils.createAugmentedTypedArray(3, numVertices);
-        const normals   = webglUtils.createAugmentedTypedArray(3, numVertices);
-        const texCoords = webglUtils.createAugmentedTypedArray(2, numVertices);
-        const indices   = webglUtils.createAugmentedTypedArray(3,
-            radialSubdivisions * (verticalSubdivisions + extra) * 2, Uint16Array);
+        const positions = utils.createAugmentedTypedArray(3, numVertices);
+        const normals   = utils.createAugmentedTypedArray(3, numVertices);
+        const texCoords = utils.createAugmentedTypedArray(2, numVertices);
+        const indices   = utils.createAugmentedTypedArray(
+            3,
+            radialSubdivisions * (verticalSubdivisions + extra) * 2,
+            Uint16Array
+        );
 
         const vertsAroundEdge = radialSubdivisions + 1;
 
@@ -297,14 +318,14 @@ let Shape = class {
             }
         }
 
-        for (let j = 0; j < verticalSubdivisions + extra; ++j) {
-            for (let i = 0; i < radialSubdivisions; ++i) {
-                indices.push(vertsAroundEdge * (j + 0) + 0 + i,
-                    vertsAroundEdge * (j + 0) + 1 + i,
+        for (let j = 0; j < verticalSubdivisions + extra; j++) {
+            for (let i = 0; i < radialSubdivisions; i++) {
+                indices.push(vertsAroundEdge * (j) + i,
+                    vertsAroundEdge * (j) + 1 + i,
                     vertsAroundEdge * (j + 1) + 1 + i);
-                indices.push(vertsAroundEdge * (j + 0) + 0 + i,
+                indices.push(vertsAroundEdge * (j) + i,
                     vertsAroundEdge * (j + 1) + 1 + i,
-                    vertsAroundEdge * (j + 1) + 0 + i);
+                    vertsAroundEdge * (j + 1) + i);
             }
         }
 
@@ -318,22 +339,22 @@ let Shape = class {
 
     // endregion
 
-    // region Public shape functions
+    // region Public shapesInfo functions
 
     static createCube(gl, ...args) {
-        let func = Shape.createFlattenedFunc(Shape.createCubeVertices);
+        let func = shapesInfo.createFlattenedFunc(shapesInfo.createCubeVertices);
 
         return func(gl, ...args);
     }
 
     static createSphere(gl, ...args) {
-        let func = Shape.createFlattenedFunc(Shape.createSphereVertices);
+        let func = shapesInfo.createFlattenedFunc(shapesInfo.createSphereVertices);
 
         return func(gl, ...args);
     }
 
     static createCone(gl, ...args) {
-        let func = Shape.createFlattenedFunc(Shape.createTruncatedConeVertices);
+        let func = shapesInfo.createFlattenedFunc(shapesInfo.createTruncatedConeVertices);
 
         return func(gl, ...args);
     }

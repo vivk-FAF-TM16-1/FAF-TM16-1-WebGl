@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="" />
+    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resize.html" beforeDir="false" afterPath="$PROJECT_DIR$/resize.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/Main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/Shape.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/shapesInfo.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/Utils.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/Vector4.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/Vector4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/ui-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/ui-controller.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,11 +21,25 @@
       <list>
         <option value="CSS File" />
         <option value="HTML File" />
+        <option value="GLSL Shader" />
         <option value="JavaScript File" />
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1h9EbKslwCqzFDEVsxoCOwQTKpq" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectPluginTracker">
+    <option name="disabledPlugins">
+      <set>
+        <option value="IdeaVIM" />
+      </set>
+    </option>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -26,7 +49,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../rgb_triangle" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../3d_shape" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -41,6 +64,11 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Projects\3d_shapes\Script" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="qwe" type="FirefoxRemoteDebugType">
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -62,21 +90,44 @@
       <workItem from="1601269518291" duration="28000" />
       <workItem from="1601621531909" duration="865000" />
       <workItem from="1601721203792" duration="16884000" />
-      <workItem from="1601967027430" duration="18727000" />
+      <workItem from="1601967027430" duration="19340000" />
+      <workItem from="1602050740942" duration="115000" />
+      <workItem from="1602050879164" duration="2872000" />
+      <workItem from="1602053796506" duration="192000" />
+      <workItem from="1602054003770" duration="28000" />
+      <workItem from="1602054045271" duration="42000" />
+      <workItem from="1602054099504" duration="571000" />
+      <workItem from="1602070701974" duration="13511000" />
+      <workItem from="1602142059289" duration="1405000" />
+      <workItem from="1602162384551" duration="37546000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="WindowStateProjectService">
-    <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1601724522046">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1601724522046" />
-    <state x="479" y="153" key="SettingsEditor" timestamp="1599946683915">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="479" y="153" key="SettingsEditor/0.0.1920.1080/1920.0.1680.1050@0.0.1920.1080" timestamp="1599946683915" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$APPLICATION_CONFIG_DIR$/javascript/extLibs/http_webglfundamentals.org_webgl_resources_webgl-utils.js</url>
+          <line>276</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

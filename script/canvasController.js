@@ -6,9 +6,10 @@ class canvasController {
     static programInfo;
 
     static degToRad = Math.PI / 180;
-    static fieldOfView;
 
     static objects = [];
+
+    static camera;
 
     static setupGl(gl) {
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
@@ -33,14 +34,30 @@ class canvasController {
         Object.freeze(canvasController.shapes);
     }
 
-    static computeGraphics(gl, objects, computeMatrix, fov, degToRad) {
-        const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
-        const projectionMatrix = matrix4.perspective(fov, aspect, 1, 500);
+    static computeGraphics(gl, objects, computeMatrix, camera, degToRad) {
 
-        const cameraPosition = [0, 0, 100];
-        const target = [0, 0, 0];
-        const up = [0, 1, 0];
-        const cameraMatrix = matrix4.lookAt(cameraPosition, target, up);
+        const fov = camera.fieldOfView * degToRad;
+        const zNear = camera.zNear;
+        const zFar = camera.zFar;
+
+        const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
+        const projectionMatrix = matrix4.perspective(fov, aspect, zNear, zFar);
+
+        const cPosition = camera.position;
+        const cTarget = new vector3(
+            camera.position.x + camera.targetSub.x,
+            camera.position.y + camera.targetSub.y,
+            camera.position.z + camera.targetSub.z
+        );
+        const up = vector3.copy(camera.up);
+
+        cTarget.xRotateAround(camera.rotation.x * degToRad, cPosition);
+        cTarget.yRotateAround(camera.rotation.y * degToRad, cPosition);
+        up.zRotateAround(camera.rotation.z * degToRad, camera.v3Zero);
+
+        const cameraMatrix = matrix4.lookAt(
+            cPosition.toArray(), cTarget.toArray(), up.toArray()
+        );
 
         let viewMatrix = matrix4.inverse(cameraMatrix);
 
@@ -113,15 +130,15 @@ class canvasController {
         const gl = canvasController.gl;
 
         const computeMatrix = canvasController.computeMatrix;
+        const camera = canvasController.camera;
 
-        const fieldOfView = canvasController.fieldOfView;
         const degToRad = canvasController.degToRad;
 
         utils.resizeCanvasToDisplaySize(gl.canvas);
 
         canvasController.setupGl(gl);
 
-        canvasController.computeGraphics(gl, objects, computeMatrix, fieldOfView, degToRad)
+        canvasController.computeGraphics(gl, objects, computeMatrix, camera, degToRad)
         canvasController.updateGraphics(gl, objects);
 
         requestAnimationFrame(canvasController.update);
@@ -154,6 +171,19 @@ class canvasController {
         canvasController.fieldOfView = 60 * canvasController.degToRad;
 
         canvasController.objects = [];
+
+        canvasController.camera = {
+            position: new vector3(0, 0, 100),
+            rotation: new vector3(0, 0, 0),
+
+            targetSub: new vector3(0, 0, -100),
+            up: new vector3(0, 1, 0),
+            v3Zero: vector3.zero(),
+
+            fieldOfView: 60,
+            zNear: 1,
+            zFar: 500
+        }
 
         requestAnimationFrame(canvasController.update);
     }

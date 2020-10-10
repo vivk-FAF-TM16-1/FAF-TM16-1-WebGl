@@ -7,7 +7,8 @@ let hierarchyAddElementContainer;
 
 let hideableComponents;
 
-let onChangeComponent;
+let onChangeTransform;
+let onChangeCamera;
 
 let addElementButton;
 let removeElementButton;
@@ -19,6 +20,7 @@ let createConeContent;
 let createSphereContent;
 
 let transformComponent;
+let cameraComponent;
 
 let activeElement = null;
 let listDOM = [];
@@ -92,7 +94,55 @@ function updateHierarchy() {
     hideableComponents.hidden = activeElement === null;
 }
 
-function changeComponent() {
+function changeCamera() {
+    const camera = canvasController.camera;
+
+    camera.position.x = Number.parseFloat(cameraComponent.position.x.value);
+    camera.position.y = Number.parseFloat(cameraComponent.position.y.value);
+    camera.position.z = Number.parseFloat(cameraComponent.position.z.value);
+
+    camera.rotation.x = Number.parseFloat(cameraComponent.rotation.x.value);
+    camera.rotation.y = Number.parseFloat(cameraComponent.rotation.y.value);
+    camera.rotation.z = Number.parseFloat(cameraComponent.rotation.z.value);
+
+    camera.fieldOfView = Number.parseFloat(cameraComponent.fov.value);
+    camera.zNear = Number.parseFloat(cameraComponent.zNear.value);
+    camera.zFar = Number.parseFloat(cameraComponent.zFar.value);
+
+    updateCameraComponent();
+}
+
+function cameraConstructor() {
+    const component = ".camera .row ";
+
+    return {
+        position: positionConstructor(component),
+        rotation: rotationConstructor(component),
+
+        fov: document.querySelector(".fov"),
+        zNear: document.querySelector(".z-near"),
+        zFar: document.querySelector(".z-far")
+    }
+}
+
+function updateCameraComponent() {
+
+    const camera = canvasController.camera;
+
+    cameraComponent.position.x.value = camera.position.x;
+    cameraComponent.position.y.value = camera.position.y;
+    cameraComponent.position.z.value = camera.position.z;
+
+    cameraComponent.rotation.x.value = camera.rotation.x;
+    cameraComponent.rotation.y.value = camera.rotation.y;
+    cameraComponent.rotation.z.value = camera.rotation.z;
+
+    cameraComponent.fov.value = camera.fieldOfView
+    cameraComponent.zNear.value = camera.zNear;
+    cameraComponent.zFar.value = camera.zFar;
+}
+
+function changeTransform() {
     if (activeElement === null) {
         return;
     }
@@ -116,34 +166,36 @@ function changeComponent() {
 }
 
 function transformConstructor() {
+    const component = ".transform .row ";
+
     return {
-        position: positionConstructor(),
-        rotation: rotationConstructor(),
-        scale   : scaleConstructor()
+        position: positionConstructor(component),
+        rotation: rotationConstructor(component),
+        scale   : scaleConstructor(component)
     }
 }
 
-function positionConstructor() {
+function positionConstructor(component) {
     return {
-        x: document.querySelector(".position .vector3-x"),
-        y: document.querySelector(".position .vector3-y"),
-        z: document.querySelector(".position .vector3-z")
+        x: document.querySelector(component + ".position .vector3-x "),
+        y: document.querySelector(component + ".position .vector3-y "),
+        z: document.querySelector(component + ".position .vector3-z ")
     }
 }
 
-function rotationConstructor() {
+function rotationConstructor(component) {
     return {
-        x: document.querySelector(".rotation .vector3-x"),
-        y: document.querySelector(".rotation .vector3-y"),
-        z: document.querySelector(".rotation .vector3-z")
+        x: document.querySelector(component + ".rotation .vector3-x "),
+        y: document.querySelector(component + ".rotation .vector3-y "),
+        z: document.querySelector(component + ".rotation .vector3-z ")
     }
 }
 
-function scaleConstructor() {
+function scaleConstructor(component) {
     return {
-        x: document.querySelector(".scale .vector3-x"),
-        y: document.querySelector(".scale .vector3-y"),
-        z: document.querySelector(".scale .vector3-z")
+        x: document.querySelector(component + ".scale .vector3-x "),
+        y: document.querySelector(component + ".scale .vector3-y "),
+        z: document.querySelector(component + ".scale .vector3-z ")
     }
 }
 
@@ -196,7 +248,8 @@ function uiControllerConstructor() {
 
     hideableComponents = document.querySelector(".hideable-components");
 
-    onChangeComponent = document.querySelector(".on-change");
+    onChangeTransform = document.querySelector(".on-change-transform");
+    onChangeCamera = document.querySelector(".on-change-camera");
 
     dropdownContent = document.querySelector(".dropdown-content");
 
@@ -205,9 +258,11 @@ function uiControllerConstructor() {
     addElementButton.onclick = toggleDropdownContent;
     removeElementButton.onclick = removeElement;
 
-    onChangeComponent.onchange = changeComponent;
+    onChangeTransform.onchange = changeTransform;
+    onChangeCamera.onchange = changeCamera;
 
     transformComponent = transformConstructor();
+    cameraComponent = cameraConstructor();
 
     body.onclick = disableDropdownContent;
 
@@ -217,6 +272,7 @@ function uiControllerConstructor() {
 
     canvasController.construct();
 
+    updateCameraComponent();
     updateHierarchy();
 }
 

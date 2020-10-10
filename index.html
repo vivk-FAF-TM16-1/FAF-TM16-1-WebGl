@@ -51,12 +51,16 @@
             clear: both;
         }
 
-        .top {
+        .hierarchy-component {
             height: 400px;
         }
 
-        .bottom {
+        .transform-component {
             height: 200px;
+        }
+
+        .camera-component {
+            height: 180px;
         }
 
         input {
@@ -72,6 +76,10 @@
 
         .input-vector3 {
             width: 60%;
+        }
+
+        .input-float {
+            width: 100%;
         }
 
         .label-column {
@@ -109,6 +117,11 @@
         .vector3-field {
             float: left;
             width: 33%;
+        }
+
+        .float-field {
+            float: left;
+            width: 100%;
         }
 
         .canvas {
@@ -186,7 +199,9 @@
             background-color: #ddd;
         }
 
-        .show {display: block;}
+        .show {
+            display: block;
+        }
 
 
     </style>
@@ -197,7 +212,79 @@
         <canvas class="canvas"></canvas>
     </div>
     <div class="column column-full-screen right ui-side">
-        <div class="row top component-value">
+        <div class="row camera-component component-value camera on-change-camera">
+            <div class="component-name">
+                <p>Camera</p>
+            </div>
+            <div class="row">
+
+                <label class="field-name label-column component-single-field">Position</label>
+                <div class="field-value component-single-field position">
+                    <div class="vector3-field">
+                        <label class="label-column">X: </label>
+                        <input class="input-column input-vector3 vector3-x"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+
+                    <div class="vector3-field">
+                        <label class="label-column">Y: </label>
+                        <input class="input-column input-vector3 vector3-y"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                    <div class="vector3-field">
+                        <label class="label-column">Z: </label>
+                        <input class="input-column input-vector3 vector3-z"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                </div>
+
+                <label class="field-name label-column component-single-field">Rotation</label>
+                <div class="field-value component-single-field rotation">
+                    <div class="vector3-field">
+                        <label class="label-column">X: </label>
+                        <input class="input-column input-vector3 vector3-x"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+
+                    <div class="vector3-field">
+                        <label class="label-column">Y: </label>
+                        <input class="input-column input-vector3 vector3-y"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                    <div class="vector3-field">
+                        <label class="label-column">Z: </label>
+                        <input class="input-column input-vector3 vector3-z"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                </div>
+
+                <label class="field-name label-column component-single-field">FieldOfView</label>
+                <div class="field-value component-single-field">
+                    <div class="float-field">
+                        <input class="input-column input-float fov"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                </div>
+
+                <label class="field-name label-column component-single-field">ZNear</label>
+                <div class="field-value component-single-field">
+                    <div class="float-field">
+                        <input class="input-column input-float z-near"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                </div>
+
+                <label class="field-name label-column component-single-field">ZFar</label>
+                <div class="field-value component-single-field">
+                    <div class="float-field">
+                        <input class="input-column input-float z-far"
+                               type="number" value="0.0" step="0.01" />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row hierarchy-component component-value">
             <div class="component-name hierarchy-add-element">
                 <p>Hierarchy</p>
             </div>
@@ -220,8 +307,8 @@
                 </div>
             </div>
         </div>
-        <div class="hideable-components on-change">
-            <div class="row bottom component-value transform">
+        <div class="hideable-components on-change-transform">
+            <div class="row transform-component component-value transform">
                 <div class="component-name">
                     <p>Transform</p>
                 </div>

@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="">
+    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="Modified utils script">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resize.html" beforeDir="false" afterPath="$PROJECT_DIR$/resize.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/Main.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/Main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/Shape.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/shapesInfo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/Utils.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/Vector4.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/Vector4.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/ui-controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/ui-controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/canvasController.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/canvasController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/uiController.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/uiController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/vector3.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/vector3.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +46,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../3d_shape" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -99,8 +96,28 @@
       <workItem from="1602054099504" duration="571000" />
       <workItem from="1602070701974" duration="13511000" />
       <workItem from="1602142059289" duration="1405000" />
-      <workItem from="1602162384551" duration="37546000" />
+      <workItem from="1602162384551" duration="38759000" />
+      <workItem from="1602240647585" duration="691000" />
+      <workItem from="1602262570189" duration="2206000" />
+      <workItem from="1602273643959" duration="90000" />
+      <workItem from="1602274517172" duration="2794000" />
+      <workItem from="1602317481718" duration="13159000" />
     </task>
+    <task id="LOCAL-00001" summary="Final version combo lab1_2">
+      <created>1602233389474</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1602233389474</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Modified utils script">
+      <created>1602233414016</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1602233414016</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -118,13 +135,17 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Final version combo lab1_2" />
+    <MESSAGE value="Modified utils script" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified utils script" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$APPLICATION_CONFIG_DIR$/javascript/extLibs/http_webglfundamentals.org_webgl_resources_webgl-utils.js</url>
           <line>276</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>

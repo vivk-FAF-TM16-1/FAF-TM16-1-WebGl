@@ -62,10 +62,7 @@ class shapesInfo {
         if (vertices.indices) {
             for (let i = 0; i < numElements; i++) {
                 const color = [
-                    rand(i, 0),
-                    rand(i, 1),
-                    rand(i, 2),
-                    1
+                    255, 255, 255, 255
                 ];
                 vColors.push(color);
             }
@@ -77,10 +74,7 @@ class shapesInfo {
         const numSets = numElements / numVertsPerColor;
         for (let i = 0; i < numSets; ++i) {
             const color = [
-                rand(i, 0),
-                rand(i, 1),
-                rand(i, 2),
-                1
+                255, 255, 255, 255
             ];
             for (let j = 0; j < numVertsPerColor; j++) {
                 vColors.push(color);

@@ -10,6 +10,9 @@ let hideableComponents;
 let onChangeTransform;
 let onChangeCamera;
 
+let onChangeFirstLight;
+let onChangeSecondLight;
+
 let addElementButton;
 let removeElementButton;
 
@@ -21,6 +24,9 @@ let createSphereContent;
 
 let transformComponent;
 let cameraComponent;
+
+let firstLightSourceComponent;
+let secondLightSourceComponent;
 
 let activeElement = null;
 let listDOM = [];
@@ -109,7 +115,39 @@ function changeCamera() {
     camera.zNear = Number.parseFloat(cameraComponent.zNear.value);
     camera.zFar = Number.parseFloat(cameraComponent.zFar.value);
 
+    camera.ambientColor.x = Number.parseFloat(cameraComponent.ambientColor.x.value) / 255;
+    camera.ambientColor.y = Number.parseFloat(cameraComponent.ambientColor.y.value) / 255;
+    camera.ambientColor.z = Number.parseFloat(cameraComponent.ambientColor.z.value) / 255;
+
     updateCameraComponent();
+}
+
+function changeLight(index) {
+
+    let light;
+    let lightSourceComponent;
+
+    if (index === 0) {
+        light = canvasController.firstLight;
+        lightSourceComponent = firstLightSourceComponent;
+    } else {
+        light = canvasController.secondLight;
+        lightSourceComponent = secondLightSourceComponent;
+    }
+
+
+    light.position.x = Number.parseFloat(lightSourceComponent.position.x.value);
+    light.position.y = Number.parseFloat(lightSourceComponent.position.y.value);
+    light.position.z = Number.parseFloat(lightSourceComponent.position.z.value);
+
+    light.color.x = Number.parseFloat(lightSourceComponent.color.x.value) / 255;
+    light.color.y = Number.parseFloat(lightSourceComponent.color.y.value) / 255;
+    light.color.z = Number.parseFloat(lightSourceComponent.color.z.value) / 255;
+
+    light.shininess = Number.parseFloat(lightSourceComponent.shininess.value);
+    light.attenuation = Number.parseFloat(lightSourceComponent.attenuation.value);
+
+    updateLightComponent(index);
 }
 
 function cameraConstructor() {
@@ -118,10 +156,23 @@ function cameraConstructor() {
     return {
         position: positionConstructor(component),
         rotation: rotationConstructor(component),
+        ambientColor: scaleConstructor(component),
 
         fov: document.querySelector(".fov"),
         zNear: document.querySelector(".z-near"),
         zFar: document.querySelector(".z-far")
+    }
+}
+
+function lightSourceConstructor(index) {
+    const component = index + " .row ";
+
+    return {
+        position: positionConstructor(component),
+        color: rotationConstructor(component),
+
+        shininess: document.querySelector(component + ".field-value .float-field .shininess"),
+        attenuation: document.querySelector(component + ".field-value .float-field .attenuation"),
     }
 }
 
@@ -140,6 +191,35 @@ function updateCameraComponent() {
     cameraComponent.fov.value = camera.fieldOfView
     cameraComponent.zNear.value = camera.zNear;
     cameraComponent.zFar.value = camera.zFar;
+
+    cameraComponent.ambientColor.x.value = camera.ambientColor.x * 255;
+    cameraComponent.ambientColor.y.value = camera.ambientColor.y * 255;
+    cameraComponent.ambientColor.z.value = camera.ambientColor.z * 255;
+}
+
+function updateLightComponent(index) {
+
+    let light;
+    let lightSourceComponent;
+
+    if (index === 0) {
+        light = canvasController.firstLight;
+        lightSourceComponent = firstLightSourceComponent;
+    } else {
+        light = canvasController.secondLight;
+        lightSourceComponent = secondLightSourceComponent;;
+    }
+
+    lightSourceComponent.position.x.value = light.position.x;
+    lightSourceComponent.position.y.value = light.position.y;
+    lightSourceComponent.position.z.value = light.position.z;
+
+    lightSourceComponent.color.x.value = light.color.x * 255;
+    lightSourceComponent.color.y.value = light.color.y * 255;
+    lightSourceComponent.color.z.value = light.color.z * 255;
+
+    lightSourceComponent.shininess.value = light.shininess;
+    lightSourceComponent.attenuation.value = light.attenuation;
 }
 
 function changeTransform() {
@@ -251,6 +331,9 @@ function uiControllerConstructor() {
     onChangeTransform = document.querySelector(".on-change-transform");
     onChangeCamera = document.querySelector(".on-change-camera");
 
+    onChangeFirstLight = document.querySelector(".on-change-first-light");
+    onChangeSecondLight = document.querySelector(".on-change-second-light");
+
     dropdownContent = document.querySelector(".dropdown-content");
 
     body = document.querySelector("body");
@@ -261,8 +344,19 @@ function uiControllerConstructor() {
     onChangeTransform.onchange = changeTransform;
     onChangeCamera.onchange = changeCamera;
 
+    onChangeFirstLight.onchange = function() {
+       changeLight(0);
+    };
+
+    onChangeSecondLight.onchange = function() {
+        changeLight(1);
+    };
+
     transformComponent = transformConstructor();
     cameraComponent = cameraConstructor();
+
+    firstLightSourceComponent = lightSourceConstructor(".first-light-source");
+    secondLightSourceComponent = lightSourceConstructor(".second-light-source");
 
     body.onclick = disableDropdownContent;
 
@@ -271,6 +365,9 @@ function uiControllerConstructor() {
     createSphereContent.onclick = createSphere;
 
     canvasController.construct();
+
+    updateLightComponent(0);
+    updateLightComponent(1);
 
     updateCameraComponent();
     updateHierarchy();

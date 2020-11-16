@@ -34,7 +34,7 @@ class canvasController {
         Object.freeze(canvasController.shapes);
     }
 
-    static computeGraphics(gl, objects, computeMatrix, camera, degToRad) {
+    static computeGraphics(gl, objects, computeMatrix, camera, degToRad, firstLight, secondLight) {
 
         const fov = camera.fieldOfView * degToRad;
         const zNear = camera.zNear;
@@ -64,11 +64,60 @@ class canvasController {
         let viewProjectionMatrix = matrix4.multiply(projectionMatrix, viewMatrix);
 
         objects.forEach(function(object) {
-            object.uniforms.u_matrix = computeMatrix(
-                viewProjectionMatrix,
+            object.uniforms.u_world = computeMatrix(
+                matrix4.identity(),
                 object,
                 degToRad
             );
+
+            object.uniforms.u_matrix = matrix4.multiply(
+                viewProjectionMatrix,
+                object.uniforms.u_world
+            );
+
+            object.uniforms.u_worldInverse = matrix4.inverse(
+                object.uniforms.u_world
+            );
+
+            object.uniforms.u_worldInverse = matrix4.transpose(
+                object.uniforms.u_worldInverse
+            )
+
+            object.uniforms.u_ambientColor = [
+                camera.ambientColor.x,
+                camera.ambientColor.y,
+                camera.ambientColor.z
+            ];
+
+            object.uniforms.u_firstLightPosition = [
+                firstLight.position.x,
+                firstLight.position.y,
+                firstLight.position.z
+            ];
+
+            object.uniforms.u_firstLightColor = [
+                firstLight.color.x,
+                firstLight.color.y,
+                firstLight.color.z
+            ];
+
+            object.uniforms.u_firstLightShininess = firstLight.shininess;
+            object.uniforms.u_firstLightAttenuation = firstLight.attenuation;
+
+            object.uniforms.u_secondLightPosition = [
+                secondLight.position.x,
+                secondLight.position.y,
+                secondLight.position.z
+            ];
+
+            object.uniforms.u_secondLightColor = [
+                secondLight.color.x,
+                secondLight.color.y,
+                secondLight.color.z
+            ];
+
+            object.uniforms.u_secondLightShininess = secondLight.shininess;
+            object.uniforms.u_secondLightAttenuation = secondLight.attenuation;
         });
     }
 
@@ -100,9 +149,9 @@ class canvasController {
 
     }
 
-    static computeMatrix(viewProjectionMatrix, object, degToRad) {
-        let matrix = matrix4.translate(
-            viewProjectionMatrix,
+    static computeMatrix(matrix, object, degToRad) {
+        matrix = matrix4.translate(
+            matrix,
             object.position.x,
             object.position.y,
             object.position.z
@@ -132,13 +181,16 @@ class canvasController {
         const computeMatrix = canvasController.computeMatrix;
         const camera = canvasController.camera;
 
+        const firstLight = canvasController.firstLight;
+        const secondLight = canvasController.secondLight;
+
         const degToRad = canvasController.degToRad;
 
         utils.resizeCanvasToDisplaySize(gl.canvas);
 
         canvasController.setupGl(gl);
 
-        canvasController.computeGraphics(gl, objects, computeMatrix, camera, degToRad)
+        canvasController.computeGraphics(gl, objects, computeMatrix, camera, degToRad, firstLight, secondLight)
         canvasController.updateGraphics(gl, objects);
 
         requestAnimationFrame(canvasController.update);
@@ -146,13 +198,14 @@ class canvasController {
 
     static construct() {
         const canvas = document.querySelector(".canvas");
-        const gl = canvas.getContext("webgl");
+        let gl = canvas.getContext("webgl");
 
         canvasController.gl = gl;
 
         if (!gl) {
             return;
         }
+
 
         canvasController.setupShapes(gl, this)
 
@@ -172,6 +225,16 @@ class canvasController {
 
         canvasController.objects = [];
 
+        canvasController.lightPosition = gl.getUniformLocation(
+            canvasController.programInfo.program,
+            "u_lightPosition"
+        );
+
+        canvasController.lightTarget = gl.getUniformLocation(
+            canvasController.programInfo.program,
+            "u_lightTarget"
+        );
+
         canvasController.camera = {
             position: new vector3(0, 0, 100),
             rotation: new vector3(0, 0, 0),
@@ -182,7 +245,26 @@ class canvasController {
 
             fieldOfView: 60,
             zNear: 1,
-            zFar: 500
+            zFar: 500,
+
+            ambientColor: new vector3(.2, .2, .2)
+        }
+
+        canvasController.firstLight = {
+            position: new vector3(0, 0, 20),
+            color: new vector3(1, 1, 1),
+
+            shininess: 20,
+            attenuation: .2
+        }
+
+
+        canvasController.secondLight = {
+            position: new vector3(0, 20, 0),
+            color: new vector3(1, 1, 1),
+
+            shininess: 20,
+            attenuation: .2
         }
 
         requestAnimationFrame(canvasController.update);
@@ -195,7 +277,21 @@ class canvasController {
                 rand(.25, .75), rand(.25, .75), rand(.25, .75), 1
             ],
             u_matrix: matrix4.identity(),
-        }
+            u_world: matrix4.one(),
+            u_worldInverse: matrix4.one(),
+
+            u_ambientColor: [.2, .2, .2],
+
+            u_firstLightPosition: [0, 0, 20],
+            u_firstLightColor: [1, 1, 1],
+            u_firstLightShininess: 20,
+            u_firstLightAttenuation: .2,
+
+            u_secondLightPosition: [-20, 0, 0],
+            u_secondLightColor: [1, 1, 1],
+            u_secondLightShininess: 20,
+            u_secondLightAttenuation: .2,
+    }
 
         const position = vector3.zero();
         const rotation = vector3.zero();

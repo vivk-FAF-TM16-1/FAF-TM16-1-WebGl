@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="Modified utils script">
+    <list default="true" id="173bf2e7-5c16-4702-8ca5-f35eff181567" name="Default Changelist" comment="Modified camera and added component in client.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/script/canvasController.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/canvasController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/matrix4.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/matrix4.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/script/shapesInfo.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/shapesInfo.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/script/uiController.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/uiController.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/script/vector3.js" beforeDir="false" afterPath="$PROJECT_DIR$/script/vector3.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +21,7 @@
         <option value="HTML File" />
         <option value="GLSL Shader" />
         <option value="JavaScript File" />
+        <option value="package.json" />
       </list>
     </option>
   </component>
@@ -46,6 +48,8 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.18.4" />
+    <property name="javascript.nodejs.core.library.typings.version" value="12.19.4" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -54,6 +58,7 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -101,7 +106,16 @@
       <workItem from="1602262570189" duration="2206000" />
       <workItem from="1602273643959" duration="90000" />
       <workItem from="1602274517172" duration="2794000" />
-      <workItem from="1602317481718" duration="13159000" />
+      <workItem from="1602317481718" duration="14999000" />
+      <workItem from="1602416706835" duration="13000" />
+      <workItem from="1602446738344" duration="795000" />
+      <workItem from="1602582551978" duration="167000" />
+      <workItem from="1602583402477" duration="135000" />
+      <workItem from="1602618524504" duration="836000" />
+      <workItem from="1603289943593" duration="118000" />
+      <workItem from="1605451576052" duration="22976000" />
+      <workItem from="1605505941788" duration="8814000" />
+      <workItem from="1605534158285" duration="12574000" />
     </task>
     <task id="LOCAL-00001" summary="Final version combo lab1_2">
       <created>1602233389474</created>
@@ -117,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1602233414016</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Modified camera and added component in client.">
+      <created>1602334590702</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1602334590702</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -138,7 +159,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Final version combo lab1_2" />
     <MESSAGE value="Modified utils script" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified utils script" />
+    <MESSAGE value="Modified camera and added component in client." />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified camera and added component in client." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

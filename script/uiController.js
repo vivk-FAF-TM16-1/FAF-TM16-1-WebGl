@@ -28,6 +28,11 @@ let cameraComponent;
 let firstLightSourceComponent;
 let secondLightSourceComponent;
 
+let addTextureButton;
+let removeTextureButton;
+
+let textureComponent;
+
 let activeElement = null;
 let listDOM = [];
 
@@ -91,13 +96,18 @@ function setAsActive() {
     activeElement = this;
 
     updateTransformComponent();
+    updateRendererComponent();
 
     updateHierarchy();
 }
 
 function updateHierarchy() {
     removeElementButton.disabled = activeElement === null;
-    hideableComponents.hidden = activeElement === null;
+
+    hideableComponents.forEach(
+        component =>
+            component.hidden = activeElement === null
+    );
 }
 
 function changeCamera() {
@@ -176,6 +186,21 @@ function lightSourceConstructor(index) {
     }
 }
 
+function textureConstructor() {
+    const add = document.querySelector(".texture-add");
+    const remove = document.querySelector(".texture-remove");
+    const source = document.querySelector(".texture-source");
+
+    add.onchange = addTexture;
+    remove.onclick = removeTexture;
+
+    return {
+        add,
+        remove,
+        source
+    }
+}
+
 function updateCameraComponent() {
 
     const camera = canvasController.camera;
@@ -245,6 +270,44 @@ function changeTransform() {
     }
 }
 
+function addTexture() {
+    if (activeElement === null) {
+        return;
+    }
+
+    const index = listDOM.indexOf(activeElement);
+    if (index > -1) {
+        const object = canvasController.objects[index];
+
+        let source = textureComponent.add.value.split('\\');
+        source = source[source.length - 1];
+
+        object.textureSrc = source;
+        object.texture = this.files[0];
+        console.log(this.files[0]);
+        textureComponent.source.value = object.textureSrc;
+
+        canvasController.updateTexture(object);
+    }
+}
+
+function removeTexture() {
+    if (activeElement === null) {
+        return;
+    }
+
+    const index = listDOM.indexOf(activeElement);
+    if (index > -1) {
+        const object = canvasController.objects[index];
+
+        object.textureSrc = canvasController.TEXTURE_EMPTY;
+        object.texture = null;
+        textureComponent.source.value = object.textureSrc;
+
+        canvasController.updateTexture(object);
+    }
+}
+
 function transformConstructor() {
     const component = ".transform .row ";
 
@@ -303,6 +366,20 @@ function updateTransformComponent() {
 
 }
 
+function updateRendererComponent() {
+    if (activeElement === null) {
+        return;
+    }
+
+    const index = listDOM.indexOf(activeElement);
+    if (index > -1) {
+        const object = canvasController.objects[index];
+
+        textureComponent.add.value = "";
+        textureComponent.source.value = object.textureSrc;
+    }
+}
+
 function toggleDropdownContent() {
     dropdownContent.classList.toggle('show');
 }
@@ -326,13 +403,16 @@ function uiControllerConstructor() {
     createConeContent = document.querySelector(".create-cone");
     createSphereContent = document.querySelector(".create-sphere");
 
-    hideableComponents = document.querySelector(".hideable-components");
+    hideableComponents = document.querySelectorAll(".hideable-components");
 
     onChangeTransform = document.querySelector(".on-change-transform");
     onChangeCamera = document.querySelector(".on-change-camera");
 
     onChangeFirstLight = document.querySelector(".on-change-first-light");
     onChangeSecondLight = document.querySelector(".on-change-second-light");
+
+    addTextureButton = document.querySelector(".texture-add");
+    removeTextureButton = document.querySelector(".texture-remove");
 
     dropdownContent = document.querySelector(".dropdown-content");
 
@@ -344,6 +424,8 @@ function uiControllerConstructor() {
     onChangeTransform.onchange = changeTransform;
     onChangeCamera.onchange = changeCamera;
 
+    addTextureButton.onchange = addTexture;
+
     onChangeFirstLight.onchange = function() {
        changeLight(0);
     };
@@ -354,6 +436,7 @@ function uiControllerConstructor() {
 
     transformComponent = transformConstructor();
     cameraComponent = cameraConstructor();
+    textureComponent = textureConstructor();
 
     firstLightSourceComponent = lightSourceConstructor(".first-light-source");
     secondLightSourceComponent = lightSourceConstructor(".second-light-source");

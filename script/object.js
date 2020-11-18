@@ -1,7 +1,7 @@
 "use strict";
 
 class object {
-    constructor(uniforms, position, rotation, scale, programInfo, bufferInfo) {
+    constructor(uniforms, position, rotation, scale, programInfo, bufferInfo, textureSrc, texture) {
         this.uniforms    = uniforms;
         this.position    = position;
         this.rotation    = rotation;
@@ -9,5 +9,8 @@ class object {
 
         this.programInfo = programInfo;
         this.bufferInfo  = bufferInfo;
+
+        this.textureSrc  = textureSrc;
+        this.texture     = texture;
     }
 }

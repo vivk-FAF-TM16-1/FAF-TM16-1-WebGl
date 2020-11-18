@@ -38,6 +38,7 @@
 
         .right {
             width: 30%;
+            overflow-y: auto;
         }
 
         .row {
@@ -64,6 +65,10 @@
         }
 
         .light-source-component {
+            height: 150px;
+        }
+
+        .renderer {
             height: 150px;
         }
 
@@ -536,6 +541,42 @@
 
             </div>
         </div>
+
+        <div class="hideable-components">
+            <div class="row transform-component component-value renderer">
+                <div class="component-name">
+                    <p>Renderer</p>
+                </div>
+                <div class="row">
+
+                    <label class="field-name label-column component-single-field">Texture</label>
+                    <div class="field-value component-single-field">
+                        <div class="float-field">
+                            <input class="input-column input-float texture-add"
+                                   type="file" accept="image/png, .jpeg, .jpg, image/gif" />
+                        </div>
+                    </div>
+                    <div>
+                        <button class="hierarchy-button texture-remove" type="button">
+                            -
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                    <label class="field-name label-column component-single-field">TextureSource</label>
+                    <div class="field-value component-single-field">
+                        <div class="float-field">
+                            <input class="input-column input-float texture-source"
+                                   type="text" readonly />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 
@@ -544,6 +585,7 @@
     attribute vec4 a_position;
     attribute vec4 a_color;
     attribute vec3 a_normal;
+    attribute vec2 a_texcoord;
 
     uniform mat4 u_matrix;
     uniform mat4 u_world;
@@ -555,6 +597,8 @@
 
     varying vec3 v_vertex;
 
+    varying vec2 v_texcoord;
+
     void main() {
         gl_Position = u_matrix * a_position;
 
@@ -562,6 +606,7 @@
         v_vertex = (u_world * a_position).xyz;
         v_color = a_color;
         v_position = a_position;
+        v_texcoord = a_texcoord;
     }
 </script>
 
@@ -580,9 +625,12 @@
 
     uniform vec3 u_ambientColor;
 
+    uniform sampler2D u_texture;
+
     varying vec4 v_color;
     varying vec3 v_normal;
     varying vec3 v_vertex;
+    varying vec2 v_texcoord;
 
     vec3 lightCalculation(vec3 normal,
                         vec3 position,
@@ -636,8 +684,10 @@
         u_secondLightShininess,
         u_secondLightAttenuation);
 
-        vec3 color = ambientColor + firstColorLight + secondColorLight;
-        gl_FragColor = vec4(color, v_color.a);
+        vec3 light = ambientColor + firstColorLight + secondColorLight;
+        vec4 color = vec4(light, v_color.a);
+
+        gl_FragColor = texture2D(u_texture, v_texcoord) * color;
     }
 </script>
 

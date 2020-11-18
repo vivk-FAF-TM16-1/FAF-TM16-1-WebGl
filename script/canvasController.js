@@ -2,6 +2,9 @@
 
 class canvasController {
 
+    static TEXTURE_EMPTY = "Empty";
+    static TEXTURE_ERROR = "Error";
+
     static gl;
     static programInfo;
 
@@ -32,6 +35,77 @@ class canvasController {
         };
 
         Object.freeze(canvasController.shapes);
+    }
+
+    static getDefaultTexture() {
+        const gl = canvasController.gl;
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.LUMINANCE,
+            1,
+            1,
+            0,
+            gl.LUMINANCE,
+            gl.UNSIGNED_BYTE,
+            new Uint8Array([
+                0xFF
+            ]));
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+        gl.bindTexture(gl.TEXTURE_2D, null)
+
+        return texture;
+    }
+
+    static updateTexture(object) {
+        let texture = null;
+        const gl = canvasController.gl;
+
+        if (object.texture === null) {
+            texture = canvasController.getDefaultTexture();
+            object.uniforms.u_texture = texture;
+        } else {
+            const image = new Image();
+            const reader = new FileReader();
+
+            texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                new Uint8Array([0, 0, 255, 255]));
+
+            reader.onload = function(e) {
+                image.src = e.target.result;
+
+                image.onload = function() {
+                    gl.bindTexture(gl.TEXTURE_2D, texture);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+
+                    if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+                        gl.generateMipmap(gl.TEXTURE_2D);
+                    } else {
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+                    }
+
+                    gl.bindTexture(gl.TEXTURE_2D, null)
+
+                    object.uniforms.u_texture = texture;
+                };
+
+                function isPowerOf2(value) {
+                    return (value & (value - 1)) === 0;
+                }
+            }
+
+            reader.readAsDataURL(object.texture);
+        }
+
+
     }
 
     static computeGraphics(gl, objects, computeMatrix, camera, degToRad, firstLight, secondLight) {
@@ -271,7 +345,18 @@ class canvasController {
     }
 
     static createObject(shape) {
+        const u_texture = canvasController.getDefaultTexture();
         const rand = utils.rand;
+
+        const position = vector3.zero();
+        const rotation = vector3.zero();
+        const scale = vector3.one();
+
+        const programInfo = this.programInfo;
+
+        const textureSrc = this.TEXTURE_EMPTY;
+        const texture = null;
+
         const uniforms = {
             u_colorMult: [
                 rand(.25, .75), rand(.25, .75), rand(.25, .75), 1
@@ -291,13 +376,9 @@ class canvasController {
             u_secondLightColor: [1, 1, 1],
             u_secondLightShininess: 20,
             u_secondLightAttenuation: .2,
-    }
 
-        const position = vector3.zero();
-        const rotation = vector3.zero();
-        const scale = vector3.one();
-
-        const programInfo = this.programInfo;
+            u_texture: u_texture
+        }
 
         const o = new object(
             uniforms,
@@ -305,7 +386,9 @@ class canvasController {
             rotation,
             scale,
             programInfo,
-            shape
+            shape,
+            textureSrc,
+            texture
         );
 
         this.objects.push(o)

@@ -73,10 +73,29 @@ class utils {
         return shader;
     }
 
+    static getBindPointForSamplerType(gl, type) {
+        if (type === gl.SAMPLER_2D) {
+            return gl.TEXTURE_2D;
+        }
+
+        if (type === gl.SAMPLER_CUBE) {
+            return gl.TEXTURE_CUBE_MAP;
+        }
+
+        return undefined;
+    }
+
     static createUniformSetter(gl, program, uniformInfo) {
         const location = gl.getUniformLocation(program, uniformInfo.name);
         const type = uniformInfo.type;
+        let textureUnit = 0;
 
+        const isArray = (uniformInfo.size > 1 && uniformInfo.name.substr(-3) === '[0]');
+        if (type === gl.FLOAT && isArray) {
+            return function(v) {
+                gl.uniform1fv(location, v);
+            };
+        }
         if (type === gl.FLOAT) {
             return function(v) {
                 gl.uniform1f(location, v);
@@ -97,7 +116,11 @@ class utils {
                 gl.uniform4fv(location, v);
             };
         }
-
+        if (type === gl.INT && isArray) {
+            return function(v) {
+                gl.uniform1iv(location, v);
+            };
+        }
         if (type === gl.INT) {
             return function(v) {
                 gl.uniform1i(location, v);
@@ -118,7 +141,6 @@ class utils {
                 gl.uniform4iv(location, v);
             };
         }
-
         if (type === gl.BOOL) {
             return function(v) {
                 gl.uniform1iv(location, v);
@@ -139,7 +161,6 @@ class utils {
                 gl.uniform4iv(location, v);
             };
         }
-
         if (type === gl.FLOAT_MAT2) {
             return function(v) {
                 gl.uniformMatrix2fv(location, false, v);
@@ -155,8 +176,32 @@ class utils {
                 gl.uniformMatrix4fv(location, false, v);
             };
         }
+        if ((type === gl.SAMPLER_2D || type === gl.SAMPLER_CUBE) && isArray) {
+            const units = [];
+            for (let ii = 0; ii < info.size; ++ii) {
+                units.push(textureUnit++);
+            }
+            return function(bindPoint, units) {
+                return function(textures) {
+                    gl.uniform1iv(location, units);
+                    textures.forEach(function(texture, index) {
+                        gl.activeTexture(gl.TEXTURE0 + units[index]);
+                        gl.bindTexture(bindPoint, texture);
+                    });
+                };
+            }(this.getBindPointForSamplerType(gl, type), units);
+        }
+        if (type === gl.SAMPLER_2D || type === gl.SAMPLER_CUBE) {
+            return function(bindPoint, unit) {
+                return function(texture) {
+                    gl.uniform1i(location, unit);
+                    gl.activeTexture(gl.TEXTURE0 + unit);
+                    gl.bindTexture(bindPoint, texture);
+                };
+            }(this.getBindPointForSamplerType(gl, type), textureUnit++);
+        }
 
-        throw ("createUniformSetters HOWHOWHOW???");
+        throw ('Unknown type!!!');
     }
 
     static createUniformSetters(gl, program) {

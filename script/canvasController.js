@@ -218,7 +218,7 @@ class canvasController {
 
             utils.setUniforms(programInfo, object.uniforms);
 
-            gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
+            utils.drawBufferInfo(gl, bufferInfo);
         });
 
     }

@@ -403,25 +403,128 @@ class utils {
         return typedArray instanceof Uint8Array || typedArray instanceof Int8Array;
     }
 
+    static isArrayBuffer(a) {
+        return a.buffer && a.buffer instanceof ArrayBuffer;
+    }
+
+    static guessNumComponentsFromName(name, length) {
+        let numComponents;
+
+        if (name.indexOf('coord') >= 0) {
+            numComponents = 2;
+        } else if (name.indexOf('color') >= 0) {
+            numComponents = 4;
+        } else {
+            numComponents = 3;
+        }
+
+        if (length % numComponents > 0) {
+            throw 'can not guess numComponents. You should specify it.';
+        }
+
+        return numComponents;
+    }
+
+    static makeTypedArray(array, name) {
+        if (this.isArrayBuffer(array)) {
+            return array;
+        }
+
+        if (array.data &&
+            this.isArrayBuffer(array.data)) {
+            return array.data;
+        }
+
+        if (Array.isArray(array)) {
+            array = {
+                data: array,
+            };
+        }
+
+        if (!array.numComponents) {
+            array.numComponents = this.guessNumComponentsFromName(
+                name,
+                array.length
+            );
+        }
+
+        let type = array.type;
+        if (!type) {
+            if (name === 'indices') {
+                type = Uint16Array;
+            }
+        }
+        const typedArray = this.createAugmentedTypedArray(
+            array.numComponents,
+            array.data.length / array.numComponents | 0,
+            type
+        );
+
+        typedArray.push(array.data);
+        return typedArray;
+    }
+
     static createAttribsFromArrays(gl, arrays) {
         const mapping = this.createMapping(arrays);
         const attribs = {};
 
         Object.keys(mapping).forEach(function (attribName) {
             const bufferName = mapping[attribName];
-            const array = arrays[bufferName];
+            let array = arrays[bufferName];
 
-            attribs[attribName] = {
-                buffer: utils.createBufferFromTypedArray(gl, array),
-                numComponents: array.numComponents,
-                type: utils.getGLTypeForTypedArray(gl, array),
-                normalize: utils.getNormalizationForTypedArray(array),
+            if (array.value) {
+                attribs[attribName] = {
+                    value: array.value,
+                };
+            } else {
+                array = utils.makeTypedArray(array, bufferName);
+                attribs[attribName] = {
+                    buffer: utils.createBufferFromTypedArray(gl, array),
+                    numComponents: array.numComponents,
+                    type: utils.getGLTypeForTypedArray(gl, array),
+                    normalize: utils.getNormalizationForTypedArray(array),
+                }
             }
         });
+
         return attribs;
     }
 
     // endregion
+
+    static drawBufferInfo(gl, bufferInfo, primitiveType, count, offset) {
+        const indices = bufferInfo.indices;
+        primitiveType = primitiveType === undefined
+            ? gl.TRIANGLES
+            : primitiveType;
+        const numElements = count === undefined
+            ? bufferInfo.numElements
+            : count;
+        offset = offset === undefined
+            ? 0
+            : offset;
+
+        if (indices) {
+            gl.drawElements(primitiveType, numElements, gl.UNSIGNED_SHORT, offset);
+        } else {
+            gl.drawArrays(primitiveType, offset, numElements);
+        }
+    }
+
+    static getArray(array) {
+        return array.length
+            ? array
+            : array.data;
+    }
+
+    static getNumComponents(array, arrayName) {
+        return array.numComponents ||
+            array.size ||
+            this.guessNumComponentsFromName(
+                arrayName,
+                this.getArray(array).length
+            );
+    }
 
     static getNumElementsFromNonIndexedArrays(arrays) {
         const positionKeys = [
@@ -438,15 +541,24 @@ class utils {
 
         key = key || Object.keys(arrays)[0];
         const array = arrays[key];
-        const length = array.length;
-        const numComponents = array.numComponents;
-        return length / numComponents;
+        const length = this.getArray(array).length;
+        const numComponents = this.getNumComponents(array, key);
+        const numElements = length / numComponents;
+        if (length % numComponents > 0) {
+            throw new Error(
+                `numComponents ${numComponents} not correct for length ${length}`
+            );
+        }
+
+        return numElements;
     }
 
     static createBufferInfoFromArrays(gl, arrays) {
         const bufferInfo = {
             attribs: this.createAttribsFromArrays(gl, arrays),
         };
+
+
 
         bufferInfo.numElements = this.getNumElementsFromNonIndexedArrays(arrays);
 

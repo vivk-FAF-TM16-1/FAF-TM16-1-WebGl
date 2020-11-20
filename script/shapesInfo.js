@@ -52,7 +52,10 @@ class shapesInfo {
             return channel < 3 ? utils.rand(0, 255) : 255;
         };
 
-        const numElements = vertices.position.numElements;
+        const numElements = vertices.position.numElements === undefined
+            ? utils.getNumElementsFromNonIndexedArrays(vertices)
+            : vertices.position.numElements;
+
         const vColors = utils.createAugmentedTypedArray(
             4, numElements, Uint8Array
         );

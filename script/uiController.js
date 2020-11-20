@@ -22,6 +22,9 @@ let createCubeContent;
 let createConeContent;
 let createSphereContent;
 
+let createMeshContent;
+let uploadMeshContent;
+
 let transformComponent;
 let cameraComponent;
 
@@ -71,6 +74,21 @@ function createCone() {
 function createSphere() {
     const shapes = canvasController.shapes;
     createElement(shapes.sphere, "sphere");
+}
+
+function createMesh() {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        let textObj = e.target.result;
+        const shape = meshInfo.createMesh(
+            canvasController.gl,
+            textObj
+        )[0];
+        createElement(shape, "mesh");
+    }
+
+    reader.readAsText(this.files[0]);
 }
 
 function removeElement() {
@@ -403,6 +421,9 @@ function uiControllerConstructor() {
     createConeContent = document.querySelector(".create-cone");
     createSphereContent = document.querySelector(".create-sphere");
 
+    createMeshContent = document.querySelector(".create-mesh");
+    uploadMeshContent = document.querySelector(".upload-mesh");
+
     hideableComponents = document.querySelectorAll(".hideable-components");
 
     onChangeTransform = document.querySelector(".on-change-transform");
@@ -446,6 +467,12 @@ function uiControllerConstructor() {
     createCubeContent.onclick = createCube;
     createConeContent.onclick = createCone;
     createSphereContent.onclick = createSphere;
+
+    createMeshContent.onclick = function(e) {
+        e.preventDefault();
+        uploadMeshContent.click();
+    };
+    uploadMeshContent.onchange = createMesh;
 
     canvasController.construct();
 

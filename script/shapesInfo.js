@@ -48,10 +48,6 @@ class shapesInfo {
     static makeDefaultVertexColors(vertices, options) {
         options = options || { };
 
-        const rand = function(ndx, channel) {
-            return channel < 3 ? utils.rand(0, 255) : 255;
-        };
-
         const numElements = vertices.position.numElements === undefined
             ? utils.getNumElementsFromNonIndexedArrays(vertices)
             : vertices.position.numElements;

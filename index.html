@@ -619,6 +619,8 @@
 <script  id="fragment-shader-3d" type="x-shader/x-fragment">
     precision mediump float;
 
+    uniform float u_lightMult;
+
     uniform vec3 u_firstLightPosition;
     uniform vec3 u_firstLightColor;
     uniform float u_firstLightShininess;
@@ -691,6 +693,7 @@
         u_secondLightAttenuation);
 
         vec3 light = ambientColor + firstColorLight + secondColorLight;
+        light = mix(vec3(v_color), light, u_lightMult);
         vec4 color = vec4(light, v_color.a);
 
         gl_FragColor = texture2D(u_texture, v_texcoord) * color;

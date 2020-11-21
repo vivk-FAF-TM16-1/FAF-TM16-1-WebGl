@@ -11,6 +11,7 @@ class canvasController {
     static degToRad = Math.PI / 180;
 
     static objects = [];
+    static lightObjects = [];
 
     static camera;
 
@@ -105,6 +106,16 @@ class canvasController {
 
     }
 
+    static updateLightObjects(firstLight, secondLight) {
+        firstLight.object.position = firstLight.position;
+        firstLight.object.scale = firstLight.objectScale;
+        firstLight.object.lightMult = 0;
+
+        secondLight.object.position = secondLight.position;
+        secondLight.object.scale = secondLight.objectScale;
+        secondLight.object.lightMult = 0;
+    }
+
     static computeGraphics(gl, objects, computeMatrix, camera, degToRad, firstLight, secondLight) {
 
         const fov = camera.fieldOfView * degToRad;
@@ -159,6 +170,8 @@ class canvasController {
                 camera.ambientColor.y,
                 camera.ambientColor.z
             ];
+
+            object.uniforms.u_lightMult = object.lightMult;
 
             object.uniforms.u_firstLightPosition = [
                 firstLight.position.x,
@@ -246,6 +259,7 @@ class canvasController {
     }
 
     static update() {
+        const lightObjects = canvasController.lightObjects;
         const objects = canvasController.objects;
         const gl = canvasController.gl;
 
@@ -261,8 +275,26 @@ class canvasController {
 
         canvasController.setupGl(gl);
 
-        canvasController.computeGraphics(gl, objects, computeMatrix, camera, degToRad, firstLight, secondLight)
-        canvasController.updateGraphics(gl, objects);
+        canvasController.updateLightObjects(firstLight, secondLight);
+
+        const arrays = [objects, lightObjects];
+        for (let i = 0; i < arrays.length; i++) {
+            let array = arrays[i];
+            canvasController.computeGraphics(
+                gl,
+                array,
+                computeMatrix,
+                camera,
+                degToRad,
+                firstLight,
+                secondLight
+            );
+
+            canvasController.updateGraphics(
+                gl,
+                array
+            );
+        }
 
         requestAnimationFrame(canvasController.update);
     }
@@ -322,11 +354,17 @@ class canvasController {
         }
 
         canvasController.firstLight = {
-            position: new vector3(0, 0, 20),
+            position: new vector3(20, 0, 20),
             color: new vector3(1, 1, 1),
 
             shininess: 20,
-            attenuation: .2
+            attenuation: .2,
+
+            object: canvasController.createObject(
+                canvasController.shapes.sphere,
+                canvasController.lightObjects
+            ),
+            objectScale: new vector3(.2, .2, .2)
         }
 
 
@@ -335,15 +373,22 @@ class canvasController {
             color: new vector3(1, 1, 1),
 
             shininess: 20,
-            attenuation: .2
+            attenuation: .2,
+
+            object: canvasController.createObject(
+                canvasController.shapes.sphere,
+                canvasController.lightObjects
+            ),
+            objectScale: new vector3(.2, .2, .2)
         }
 
         requestAnimationFrame(canvasController.update);
     }
 
-    static createObject(shape) {
+    static createObject(shape, array) {
+        array = array || this.objects;
+
         const u_texture = canvasController.getDefaultTexture();
-        const rand = utils.rand;
 
         const position = vector3.zero();
         const rotation = vector3.zero();
@@ -354,17 +399,18 @@ class canvasController {
         const textureSrc = this.TEXTURE_EMPTY;
         const texture = null;
 
+        const lightMult = 1;
+
         const uniforms = {
-            u_colorMult: [
-                rand(.25, .75), rand(.25, .75), rand(.25, .75), 1
-            ],
             u_matrix: matrix4.identity(),
             u_world: matrix4.one(),
             u_worldInverse: matrix4.one(),
 
             u_ambientColor: [.2, .2, .2],
 
-            u_firstLightPosition: [0, 0, 20],
+            u_lightMult: lightMult,
+
+            u_firstLightPosition: [20, 0, 20],
             u_firstLightColor: [1, 1, 1],
             u_firstLightShininess: 20,
             u_firstLightAttenuation: .2,
@@ -385,10 +431,12 @@ class canvasController {
             programInfo,
             shape,
             textureSrc,
-            texture
+            texture,
+            lightMult
         );
 
-        this.objects.push(o)
+        array.push(o)
+        return o;
     }
 
     static removeObject(index) {

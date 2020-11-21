@@ -100,7 +100,7 @@ class meshInfo {
             },
             vt(parts) {
                 // should check for missing v and extra w?
-                objTexcoords.push(parts.map(parseFloat));
+                objTexcoords.push(parts.slice(0, 2).map(parseFloat));
             },
             f(parts) {
                 setGeometry();
